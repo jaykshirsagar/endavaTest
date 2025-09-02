@@ -1,5 +1,6 @@
 package com.example.carins.service;
 
+import com.example.carins.exception.CarNotFoundException;
 import com.example.carins.model.Car;
 import com.example.carins.repo.CarRepository;
 import com.example.carins.repo.InsurancePolicyRepository;
@@ -26,6 +27,9 @@ public class CarService {
     public boolean isInsuranceValid(Long carId, LocalDate date) {
         if (carId == null || date == null) return false;
         // TODO: optionally throw NotFound if car does not exist
+        if (!carRepository.existsById(carId)) {
+            throw new CarNotFoundException(carId);
+        }
         return policyRepository.existsActiveOnDate(carId, date);
     }
 }
