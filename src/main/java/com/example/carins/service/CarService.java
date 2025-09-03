@@ -1,6 +1,7 @@
 package com.example.carins.service;
 
 import com.example.carins.exception.CarNotFoundException;
+import com.example.carins.exception.DateFormatInvalidException;
 import com.example.carins.model.Car;
 import com.example.carins.model.Claim;
 import com.example.carins.repo.CarRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 @Service
 public class CarService {
@@ -35,6 +37,9 @@ public class CarService {
         // TODO: optionally throw NotFound if car does not exist
         if (!carRepository.existsById(carId)) {
             throw new CarNotFoundException(carId);
+        }
+        if (date.isBefore(LocalDate.of(2020, 1, 1)) || date.isAfter(LocalDate.of(2030, 12, 31))) {
+            throw new DateFormatInvalidException(date);
         }
         return policyRepository.existsActiveOnDate(carId, date);
     }
